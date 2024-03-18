@@ -56,14 +56,14 @@ public class ${table.controllerName} {
 
     @ApiOperation(value = "导出excel")
     @RequestMapping(value = "/exportExcel", method = RequestMethod.GET)
-    public void exportExcel(HttpServletResponse response, @Validated @QueryBody ${entity}Dto param) throws IOException {
+    public void exportExcel(HttpServletResponse response, @ModelAttribute ${entity}Dto param) throws IOException {
          service.exportExcel(response, 1, param);
     }
 
 
     @ApiOperation(value = "分页查询")
     @RequestMapping(value = "/getPageList", method = RequestMethod.GET)
-    public Result<IPage<${entity}>> getPageList(@Validated @QueryBody ${entity}Dto param) {
+    public Result<IPage<${entity}>> getPageList(@ModelAttribute ${entity}Dto param) {
         Result<IPage<${entity}>> result = new Result<>();
         result.setResult(service.getPageList(param));
         return result;
@@ -71,7 +71,7 @@ public class ${table.controllerName} {
 
     @ApiOperation(value = "全部查询")
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public Result<List<${entity}>> getList(@Validated @QueryBody ${entity}Dto param) {
+    public Result<List<${entity}>> getList(@ModelAttribute ${entity}Dto param) {
         Result<List<${entity}>> result = new Result<>();
         result.setResult(service.getList(param));
         return result;

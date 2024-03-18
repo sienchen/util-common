@@ -59,14 +59,14 @@ import java.util.List;
 
     @ApiOperation(value = "导出excel")
     @RequestMapping(value = "/exportExcel", method = RequestMethod.GET)
-    public ModelAndView exportExcel(HttpServletResponse response, ${entity}Dto param)  {
+    public ModelAndView exportExcel(HttpServletResponse response, @ModelAttribute ${entity}Dto param)  {
     return service.exportExcel(response, 1, param);
     }
 
     @ApiOperation(value = "分页查询")
     @RequestMapping(value = "/getPageList", method = RequestMethod.GET)
     public Result
-    <IPage<${entity}>> getPageList(${entity}Dto param) {
+    <IPage<${entity}>> getPageList(@ModelAttribute ${entity}Dto param) {
     Result
     <IPage<${entity}>> result = new Result<>();
     result.setResult(service.getPageList(param));
@@ -76,7 +76,7 @@ import java.util.List;
     @ApiOperation(value = "全部查询")
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
     public Result
-    <List<${entity}>> getList(${entity}Dto param) {
+    <List<${entity}>> getList(@ModelAttribute ${entity}Dto param) {
     Result
     <List<${entity}>> result = new Result<>();
     result.setResult(service.getList(param));
