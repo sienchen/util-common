@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtu.cyber.modules.mapper.GhBaseUnitMapper">
+       <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+create_by, create_time, update_by, update_time, id, name, code, level, start_node_id, end_node_id, length, sort, start_name, end_name, remark, water_ids, water_name, bak_name
+    </sql>
+     <select id="getList" resultType="com.tongtu.cyber.modules.domain.GhBaseUnit">
+         select
+         <include refid="Base_Column_List"/>
+         from gh_base_unit
+         <where>
+             <if test="param.name!= null and param.name!= ''">
+                 and name like concat('%',#{param.name},'%')
+             </if>
+             <if test="param.ids!=null and param.ids.size()>0">
+                 and id in
+                 <foreach collection="param.ids" index="index" item="item" open="(" separator="," close=")">
+                     #{item}
+                 </foreach>
+             </if>
+         </where>
+         order by update_time desc
+     </select>
+
+
+</mapper>

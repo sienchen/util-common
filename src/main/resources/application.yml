@@ -1,3 +1,76 @@
-# 应用服务 WEB 访问端口
-server.port=8080
+spring:
+  # 这是应用程序的名称
+  application:
+    name: csn
+  # 在Spring Boot中，可以使用不同的配置文件（如开发环境、测试环境、生产环境等）来设置不同的配置参数
+  profiles:
+    active: dev
+  #限制上传文件的大小和请求的大小，这里都设置为了100MB
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  #设置Jackson库用于日期序列化和反序列化的格式和时区
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  #开启Spring AOP的CGLIB代理，而不是默认的JDK动态代理
+  aop:
+    proxy-target-class: true
+  # 配置Freemarker模板引擎，包括模板文件的后缀名、内容类型、编码格式、缓存设置、文件系统访问偏好和模板文件的路径
+  freemarker:
+    suffix: .ftl
+    content-type: text/html
+    charset: UTF-8
+    cache: false
+    prefer-file-system-access: false
+    template-loader-path:
+      - classpath:/templates
+  #  配置静态资源的路径和位置，包括js、css等文件。任何匹配/**路径模式的请求都会被映射到指定的静态资源位置
+  mvc:
+    static-path-pattern: /**
+  resource:
+    static-locations: classpath:/static/,classpath:/public/
+  #Spring Boot自动配置选项
+  autoconfigure:
+    #这里排除的是阿里巴巴的Druid数据源自动配置
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+#swgger配置
+swagger:
+  #这里设置为false，表示当前没有为生产环境配置Swagger
+  production: false
+  #  基本身份验证
+  basic:
+    # 身份验证：false表示禁用 ture表示启用
+    enable: false
+    username: admin
+    password: admin1314
+
+#mybatis-plus 设置
+mybatis-plus:
+  #指定xml文件扫描路径
+  mapper-locations: classpath*:com/tongtu/cyber/modules/**/mapper/xml/*Mapper.xml
+  #全局配置
+  global-config:
+    # 是否显示MyBatis Plus的启动横幅，这里设置为false表示关闭
+    banner: false
+    #数据库配置
+    db-config:
+      # ASSIGN_ID:用户自己输入。auto：自增主键，使用数据库自增主键功能。uuid：UUID 主键，使用 UUID 生成主键。idWorker：分布式主键，使用雪花算法（Snowflake）生成主键。none：无主键，不使用主键。
+      id-type: ASSIGN_ID
+      # 是否使用下划线命名数据库表，这里设置为true表示使用
+      table-underline: true
+  configuration:
+    # 日志实现，org.apache.ibatis.logging.stdout.StdOutImpl这里设置为打印Sql到标准输出;org.apache.ibatis.logging.noop.NoOpImpl不打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 是否对null值调用setter方法，这里设置为true表示调用。
+    call-setters-on-nulls: true
+
+#这个配置项决定了哪些管理端点会在web应用中暴露出来。在这个例子中，'metrics'和'httptrace'这两个端点会被暴露出来。'metrics'端点
+# 通常用于获取应用程序的运行指标，如内存使用情况、请求数量等；'httptrace'端点则用于提供HTTP跟踪信息，有助于调试和性能分析。
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics,httptrace
 

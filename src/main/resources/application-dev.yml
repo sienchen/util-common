@@ -1,0 +1,134 @@
+server:
+  # Servlet的配置项，应用程序的上下文路径
+  servlet:
+    context-path: /csn
+  # 应用程序将要监听的端口号
+  port: 18100
+  tomcat:
+    # Tomcat能够接受的最大字节数。这里的值-1表示没有限制
+    max-swallow-size: -1
+    #Tomcat服务器的基本目录，可能用于存储临时文件或日志等
+    basedir: /home/tongtu/product/dev/visualize/data/temp
+  # 这些配置项决定了在出现错误时，应用程序将在响应中包含哪些信息。这里所有的值都被设置为ALWAYS，表示将始终包含异常、堆栈跟踪和消息。
+  error:
+    include-exception: true
+    include-stacktrace: ALWAYS
+    include-message: ALWAYS
+  compression:
+    #这个配置项决定了是否启用响应压缩，这里被设置为true
+    enabled: true
+    #启用压缩的响应的最小大小，这里被设置为1024字节
+    min-response-size: 1024
+    #哪些MIME类型的响应将启用压缩，这里列出了多种类型，包括javascript、json、xml、html、css和所有图像类型
+    mime-types: application/javascript,application/json,application/xml,text/html,text/xml,text/plain,text/css,image/*
+
+spring:
+  #数据源配置
+  datasource:
+    #连接池配置
+    druid:
+      #Druid的监控页面的配置
+      stat-view-servlet:
+        #是否开启监控页面
+        enabled: true
+        loginUsername: admin
+        loginPassword: 123456
+        #允许哪些IP访问监控页面
+        allow:
+        #Druid的过滤器配置
+      web-stat-filter:
+        #是否开启过滤器的统计功能
+        enabled: true
+    #动态数据源的相关配置
+    dynamic:
+      #全局druid参数
+      druid:
+        # 初始化大小，最小，最大
+        initial-size: 5
+        min-idle: 5
+        maxActive: 20
+        # 获取连接等待超时的时间 （毫秒）
+        maxWait: 60000
+        # 检测空闲连接的时间间隔 （毫秒）
+        timeBetweenEvictionRunsMillis: 60000
+        # 最小生存时间 （毫秒）
+        minEvictableIdleTimeMillis: 300000
+        #验证查询
+        validationQuery: SELECT 1
+        #空闲时是否测试
+        testWhileIdle: true
+        #借用时是否测试
+        testOnBorrow: false
+        #归还时是否测试
+        testOnReturn: false
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # filters: 这是Druid连接池的过滤器配置，包括stat（统计）、wall（防火墙）、slf4j（日志）等过滤器
+        filters: stat,wall,slf4j
+        # 链接属性 包括合并SQL和慢SQL的记录等属性
+        connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      datasource:
+        master:
+          url: jdbc:mysql://10.253.129.6:3306/xiangyang_security?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+          username: tocc
+          password: admin123ttyj7890uiop
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        business:
+          url: jdbc:postgresql://10.253.129.6:5432/xytocc_gh?reWriteBatchedInserts=true&ApplicationName=vehicle&allowMultiQueries=true
+          username: postgres
+          password: ttyjpostgres
+          driver-class-name: org.postgresql.Driver
+  #redis 配置
+  redis:
+    # Redis数据库的索引号，默认为0
+    database: 0
+    # Redis服务器的主机名或IP地址
+    host: 10.253.129.6
+    # Redis的密码
+    password: tongtusoft
+    # Redis服务器的端口号
+    port: 6380
+    # Lettuce是一个高级Redis客户端，用于线程安全的同步、异步和响应式访问
+    lettuce:
+      pool:
+        # 最大活动连接数，即同时与Redis建立的连接数，设0表示无限制
+        max-active: 8
+        # 最大空闲连接数，设0表示无限制
+        max-idle: 8
+        # 建立连接的最大等待时间，设-1表示无限制
+        max-wait: -1ms
+        # 最小空闲连接数，设0表示无限制
+        min-idle: 0
+        # 关闭连接时的超时时间
+      shutdown-timeout: 100ms
+
+  #MQ配置
+#  activemq:
+#    #ActiveMQ代理服务器的URL地址
+#    broker-url: tcp://10.253.129.6:61616
+#    #一个布尔值，如果设置为true，那么所有的消息都将存储在内存中，而不是存储在磁盘上。这可以提高性能，
+#    #但在代理服务器停止时，所有未持久化的消息都将丢失
+#    in-memory: false
+#    #是否启用连接池
+#    pool.enabled: false
+#    #连接池中允许的最大连接数
+#    pool.maxConnections: 10
+#    #连接池中连接的空闲超时时间（以毫秒为单位）
+#    pool.idleTimeout: 30000
+#    user: admin
+#    password: admin
+
+#文件上传设置
+jeecg :
+  uploadType: minio
+  minio:
+    # minio负载均衡
+    minio_url: http://10.253.129.11:19000
+    minio_name: admin
+    minio_pass: admin123ttyj7890uiop
+    bucketName: gh-pc
+
+#临时文件夹设置
+temp:
+   excelPath: /data/tongtu

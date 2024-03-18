@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!--日志文件的存储地址 -->
+    <property name="LOG_HOME" value="./logs"/>
+
+    <!-- 日志在控制台输出的格式【日期-线程名-日志等级-具体日志记录】 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:%L - %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{50}:%L) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志文件 名称生成格式 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_HOME}/admin-%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--日志文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+  <!-- 日志文件 名称生成格式（html） -->
+    <appender name="FILE_HTML" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_HOME}/admin-%d{yyyy-MM-dd}.%i.html</FileNamePattern>
+            <!--日志文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+            <MaxFileSize>10MB</MaxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.html.HTMLLayout">
+                <pattern>%p%d%msg%M%F{32}%L</pattern>
+            </layout>
+        </encoder>
+    </appender>
+  
+    <!-- 错误日志 名称生成格式 -->
+    <appender name="HTML" class="ch.qos.logback.core.FileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!--设置日志级别,过滤掉info日志,只输入error日志-->
+            <level>ERROR</level>
+        </filter>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.html.HTMLLayout">
+                <pattern>%p%d%msg%M%F{32}%L</pattern>
+            </layout>
+        </encoder>
+        <file>${LOG_HOME}/error-log.html</file>
+    </appender>
+
+    <!--特定日志类型记录等级-->
+    <!--MyBatis 相关的日志将被记录，并且只有警告、错误和严重级别会被输出-->
+    <logger name="com.apache.ibatis" level="WERN"/>
+    <!--Java SQL 数据库连接相关的日志将被记录，并且只有警告级别会被输出-->
+    <logger name="java.sql.Connection" level="WARN"/>
+    <!--Java SQL 语句相关的日志将被记录，并且只有警告级别会被输出-->
+    <logger name="java.sql.Statement" level="WARN"/>
+    <!--com.tongtu.cyber相关的日志将被记录，并且只有信息级别会被输出-->
+    <logger name="com.tongtu.cyber" level="INFO"/>
+    <!--SpringFox 文档生成相关的日志将被记录，并且只有警告级别会被输出-->
+    <logger name="springfox.documentation" level="WARN"/>
+
+    <!-- 根日志记录等级。这是根日志记录器的配置。根记录器是所有日志记录器的父记录器，它的记录级别将影响所有子记录器。在这里，根记录器的记录级别被设置为INFO（信息） -->
+    <root level="INFO">
+        <!--STDOUT通常表示标准输出，即控制台输出-->
+        <appender-ref ref="STDOUT"/>
+        <!--FILE通常表示文件输出，即将日志记录到文件中-->
+        <appender-ref ref="FILE"/>
+        <!--将日志记录到 HTML 格式的文件中-->
+        <appender-ref ref="HTML"/>
+        <appender-ref ref="FILE_HTML"/>
+    </root>
+
+    <!--OFF：关闭所有日志记录。 向上记录
+      FATAL：记录严重的错误事件，这些事件可能导致应用程序中断。
+      ERROR：记录错误事件，这些事件可能导致应用程序出现问题，但不一定会导致应用程序中断。
+      WARN：记录可能会导致潜在问题的警告事件。
+      INFO：记录信息性消息，这些消息突出了应用程序在粗粒度级别上的进度。
+      DEBUG：记录调试信息，这些信息在详细跟踪应用程序期间的细粒度级别上有用。
+      TRACE：记录最详细的调试信息。
+      ALL：启用所有日志记录。-->
+</configuration>

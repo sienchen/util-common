@@ -1,0 +1,9 @@
+${AnsiColor.BRIGHT_BLUE}
+====================================================================================================================
+                    欢迎使用通途产品 - Powered By http://www.tongtusoft.com.cn/
+====================================================================================================================
+
+${AnsiColor.BRIGHT_GREEN}
+Jeecg  Boot Version: 2.4.2
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}
+${AnsiColor.BLACK}
