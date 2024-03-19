@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @author: 陈世恩
  * @since: 2024-03-18
  **/
-@DS(value = "business")
+@DS("business")
 @Service
 public class GhBaseUnitServiceImpl extends ServiceImpl<GhBaseUnitMapper, GhBaseUnit> implements GhBaseUnitService {
     @Autowired
