@@ -5,7 +5,6 @@
     <groupId>com.csn</groupId>
     <artifactId>uitl-common</artifactId>
     <version>1.0</version>
-    <name>工具方法集合</name>
     <description>工具方法集合</description>
     <properties>
         <java.version>1.8</java.version>
@@ -139,101 +138,98 @@
     </repositories>
     <!-- 项目构建信息-->
     <build>
-        <pluginManagement>
-            <plugins>
-                <!-- 定义项目打包构建配置-->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.3.0</version>
-                    <configuration>
-                        <!--不在发布文件名中添加assembly id-->
-                        <appendAssemblyId>false</appendAssemblyId>
-                        <!--指定了打包配置文件的路径-->
-                        <descriptors>
-                            <descriptor>${project.basedir}/build/assembly.xml</descriptor>
-                        </descriptors>
-                        <!--最终的分发包名称，这里使用项目的名称-->
-                        <finalName>${project.name}</finalName>
-                    </configuration>
-
-                    <!-- 定义了一个执行阶段(package) -->
-                    <executions>
-                        <execution>
-                            <!--id任意 -->
-                            <id>assembly</id>
-                            <!-- 指定了package这个执行阶段绑定到Maven生命周期阶段-->
-                            <phase>package</phase>
-                            <!--'goals'指定了这个执行阶段要执行的目标 -->
-                            <goals>
-                                <!-- 只运行一次 -->
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!--编译项目的源代码-->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-                <!--打包和分发 Java 类和资源的文件格式-->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.1</version>
-                    <configuration>
-                        <archive>
-                            <!--配置了jar文件的清单文件，包括是否添加类路径、类路径前缀、主类等属性-->
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <classpathPrefix>lib</classpathPrefix>
-                                <mainClass>com.tongtu.cyber.CsnCommonApplication</mainClass>
-                            </manifest>
-                            <!--配置了清单文件中的其他条目，这里设置了类路径为'./'-->
-                            <manifestEntries>
-                                <Class-Path>./</Class-Path>
-                            </manifestEntries>
-                        </archive>
-                        <!--定义了一些需要排除的文件或目录，这些文件或目录在打包时不会被包含进jar文件中,进入配置conf中-->
-                        <excludes>
-                            <exclude>db/**</exclude>
-                            <exclude>/**/*.properties</exclude>
-                            <exclude>/**/*.yml</exclude>
-                            <exclude>/**/*.txt</exclude>
-                            <exclude>/**/*.text</exclude>
-                            <exclude>template/**</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                <!-- 当 Maven 在构建过程中处理资源时，对于具有上述扩展名的文件，不会应用任何过滤器或处理逻辑 -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <nonFilteredFileExtensions>
-                            <nonFilteredFileExtension>woff</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>eot</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>svg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ftl</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>xls</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>bpmn</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>png</nonFilteredFileExtension>
-                        </nonFilteredFileExtensions>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <!-- 定义项目打包构建配置-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <!--不在发布文件名中添加assemblyId-->
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <!--打包配置文件的路径-->
+                    <descriptors>
+                        <descriptor>${project.basedir}/build/assembly.xml</descriptor>
+                    </descriptors>
+                    <!--压缩包名称-->
+                    <finalName>${project.name}</finalName>
+                </configuration>
+                <!-- 执行阶段(package) -->
+                <executions>
+                    <execution>
+                        <!--id任意 -->
+                        <id>assembly</id>
+                        <!-- 指定了package这个执行阶段绑定到Maven生命周期阶段-->
+                        <phase>package</phase>
+                        <!--'goals'指定了这个执行阶段要执行的目标 -->
+                        <goals>
+                            <!-- 只运行一次 -->
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--编译项目的源代码-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <!--打包和分发 Java 类和资源的文件格式-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <archive>
+                        <!--配置了jar文件的清单文件，包括是否添加类路径、类路径前缀、主类等属性-->
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib</classpathPrefix>
+                            <mainClass>com.tongtu.cyber.CsnCommonApplication</mainClass>
+                        </manifest>
+                        <!--配置了清单文件中的其他条目，这里设置了类路径为'./'-->
+                        <manifestEntries>
+                            <Class-Path>./</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                    <!--定义了一些需要排除的文件或目录，这些文件或目录在打包时不会被包含进jar文件中,进入配置conf中-->
+                    <excludes>
+                        <exclude>db/**</exclude>
+                        <exclude>/**/*.properties</exclude>
+                        <exclude>/**/*.yml</exclude>
+                        <exclude>/**/*.txt</exclude>
+                        <exclude>/**/*.text</exclude>
+                        <exclude>template/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- 当 Maven 在构建过程中处理资源时，对于具有上述扩展名的文件，不会应用任何过滤器或处理逻辑 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ftl</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>bpmn</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+        </plugins>
         <!--xml文件构建进项目中-->
         <resources>
             <resource>

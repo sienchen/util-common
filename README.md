@@ -1,1 +1,1 @@
-# util-common
+# 个人项目存在gitHub上,项目主要是记录工具类
