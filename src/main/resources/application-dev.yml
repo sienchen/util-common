@@ -104,20 +104,20 @@ spring:
       shutdown-timeout: 100ms
 
   #MQ配置
-#  activemq:
-#    #ActiveMQ代理服务器的URL地址
-#    broker-url: tcp://10.253.129.6:61616
-#    #一个布尔值，如果设置为true，那么所有的消息都将存储在内存中，而不是存储在磁盘上。这可以提高性能，
-#    #但在代理服务器停止时，所有未持久化的消息都将丢失
-#    in-memory: false
-#    #是否启用连接池
-#    pool.enabled: false
-#    #连接池中允许的最大连接数
-#    pool.maxConnections: 10
-#    #连接池中连接的空闲超时时间（以毫秒为单位）
-#    pool.idleTimeout: 30000
-#    user: admin
-#    password: admin
+  activemq:
+    #ActiveMQ代理服务器的URL地址
+    broker-url: tcp://10.253.129.6:61616
+    #一个布尔值，如果设置为true，那么所有的消息都将存储在内存中，而不是存储在磁盘上。这可以提高性能，
+    #但在代理服务器停止时，所有未持久化的消息都将丢失
+    in-memory: false
+    #是否启用连接池
+    pool.enabled: false
+    #连接池中允许的最大连接数
+    pool.maxConnections: 10
+    #连接池中连接的空闲超时时间（以毫秒为单位）
+    pool.idleTimeout: 30000
+    user: admin
+    password: admin
 
 #文件上传设置
 jeecg :
@@ -130,5 +130,13 @@ jeecg :
     bucketName: gh-pc
 
 #临时文件夹设置
-temp:
-   excelPath: /data/tongtu
+temporary:
+   #excel导出错误日志路径
+   excelLogPath: /data/tongtu
+
+#模板路径设置
+template:
+   #word类型路径
+   wordPath:
+     #企业督办整改通知书
+       db: scdb.ftl

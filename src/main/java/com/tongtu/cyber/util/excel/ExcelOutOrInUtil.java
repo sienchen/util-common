@@ -56,7 +56,7 @@ import java.util.Map;
 @Component
 public class ExcelOutOrInUtil {
     //临时文件夹
-    @Value("${temp.excelPath:/data/tongtu}")
+    @Value("${temporary.excelLogPath:/data/tongtu}")
     private String baseDir;
     @Value("${jeecg.uploadType}")
     private String uploadType;
