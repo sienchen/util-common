@@ -1,4 +1,4 @@
-package com.tongtu.cyber.modules.domain.dto;
+package com.tongtu.cyber.util.upload.minio.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,8 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@ApiModel(value = "GhBaseUnitDto")
-public class GhBaseUnitDto {
+@ApiModel(value = "FileChunkMergeDto")
+public class FileChunkMergeDto {
     private Integer pageNo = 1;
     private Integer pageSize = 10;
     @ApiModelProperty(value = "ids集合")

@@ -10,7 +10,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -30,14 +29,14 @@ import java.util.Collections;
  * redis配置类，开始缓存和声明配置
  */
 @EnableCaching
-@Configuration
+//@Configuration
 @Log4j2
-public class RedisConfig extends CachingConfigurerSupport {
+public class RedisBean extends CachingConfigurerSupport {
     //LettuceConnectionFactory 是 Lettuce（一个 Redis 客户端库）的连接工厂
     @Resource
     private LettuceConnectionFactory factory;
 
-    public RedisConfig(LettuceConnectionFactory factory) {
+    public RedisBean(LettuceConnectionFactory factory) {
         if (ObjUtil.isEmpty(factory)) {
             log.error("redis初始化错误，LettuceConnectionFactory cannot be null");
             throw new RuntimeException("LettuceConnectionFactory cannot be null");

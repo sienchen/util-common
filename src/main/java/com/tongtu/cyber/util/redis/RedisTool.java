@@ -3,7 +3,6 @@ package com.tongtu.cyber.util.redis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -18,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  * @date : 2024/3/20 10:51
  */
 @Component
-public class RedisUtil {
+public class RedisTool {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private org.springframework.data.redis.core.RedisTemplate<String, Object> redisTemplate;
 
     public Object getObjectByPrefix(String prefix) {
         Set<String> keys = this.getKeys(prefix);

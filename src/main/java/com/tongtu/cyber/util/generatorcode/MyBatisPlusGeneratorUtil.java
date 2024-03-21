@@ -70,11 +70,11 @@ public class MyBatisPlusGeneratorUtil {
     private static TemplateConfig initTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
         //使用jecgBootEasyPOI导出
-        templateConfig.setEntity("templates/entity2.java");
+       /*  templateConfig.setEntity("templates/entity2.java");
         templateConfig.setMapper("templates/mapper2.java");
         templateConfig.setController("templates/controller2.java");
         templateConfig.setService("templates/service2.java");
-        templateConfig.setServiceImpl("templates/serviceImpl2.java");
+        templateConfig.setServiceImpl("templates/serviceImpl2.java"); */
         //使用easypoi导出
        /*  templateConfig.setEntity("templates/entity3.java");
         templateConfig.setMapper("templates/mapper3.java");
@@ -187,7 +187,7 @@ public class MyBatisPlusGeneratorUtil {
                /* String path = projectPath + "/src/main/resources/mapper/" + moduleName
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML; */
                 //第二种生成xml路径方式
-                String path2 = projectPath + "/src/main/java/" + "com/tongtu/cyber/" + moduleName
+                String path2 = projectPath + "/src/main/java/com/tongtu/cyber/" + moduleName
                         + "/mapper/xml/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
                 return path2;
             }
@@ -196,7 +196,7 @@ public class MyBatisPlusGeneratorUtil {
         focList.add(new FileOutConfig(templatePath2) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                String path2 = projectPath + "/src/main/java/" + "com/tongtu/cyber/" + moduleName
+                String path2 = projectPath + "/src/main/java/com/tongtu/cyber/" + moduleName
                         + "/domain/dto/" + tableInfo.getEntityName() + "Dto" + StringPool.DOT_JAVA;
                 return path2;
             }

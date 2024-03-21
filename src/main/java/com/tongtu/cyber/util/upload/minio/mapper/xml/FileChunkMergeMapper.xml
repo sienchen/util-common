@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tongtu.cyber.modules.util.upload.minio.mapper.FileChunkMergeMapper">
+       <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+id, file_real_name, file_name, suffix, file_path, file_type, total_size, md5, created_by, update_by, created_time, update_time, material_duration, upload_ids
+    </sql>
+     <select id="getList" resultType="com.tongtu.cyber.util.upload.minio.domain.FileChunkMerge">
+            select <include refid="Base_Column_List"/>  from file_chunk_merge
+            <where>
+                <if test="param.name!= null and param.name!= ''">
+                    and name like concat('%',#{param.name},'%')
+                </if>
+                <if test="param.ids!=null and param.ids.size()>0">
+                    and id in
+                    <foreach collection="param.ids" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+            order by update_time desc
+     </select>
+
+
+</mapper>

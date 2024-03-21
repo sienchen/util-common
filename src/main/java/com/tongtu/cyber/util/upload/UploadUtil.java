@@ -18,7 +18,7 @@ import java.net.URLEncoder;
 @Log4j2
 public class UploadUtil {
     /**
-     * 根据文件路径下载文件
+     * 下载文件
      *
      * @param filePath 文件路径
      * @param response
@@ -31,6 +31,12 @@ public class UploadUtil {
         downLoad(response, file.getName(), new FileInputStream(file));
     }
 
+    /**
+     * 下载文件
+     * @param response
+     * @param fileName
+     * @param inputStream
+     */
     public static void downLoad(HttpServletResponse response, String fileName, InputStream inputStream) {
         if (ObjUtil.isEmpty(inputStream)) {
             throw new RuntimeException("inputStream 为空!!!");

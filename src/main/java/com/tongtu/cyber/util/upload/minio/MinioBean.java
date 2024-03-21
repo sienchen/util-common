@@ -1,10 +1,8 @@
-package com.tongtu.cyber.util.upload;
+package com.tongtu.cyber.util.upload.minio;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * minio连接参数配置
@@ -12,9 +10,8 @@ import org.springframework.stereotype.Component;
  * @author : 陈世恩
  * @date : 2024/3/20 14:55
  */
-@Configuration
-@Component
-public class MinioConfig {
+//@Configuration
+public class MinioBean {
     @Value("${jeecg.minio.minio_url:null}")
     private String minioUrl;
     @Value("${jeecg.minio.minio_name:null}")
@@ -35,10 +32,10 @@ public class MinioConfig {
                 this.minioUrl = this.minioUrl.concat("/");
             }
         }
-        MinioUtil.setMinioUrl(this.minioUrl);
-        MinioUtil.setMinioName(this.minioName);
-        MinioUtil.setMinioPass(this.minioPass);
-        MinioUtil.setBucketName(this.bucketName);
+        MinioTool.setMinioUrl(this.minioUrl);
+        MinioTool.setMinioName(this.minioName);
+        MinioTool.setMinioPass(this.minioPass);
+        MinioTool.setBucketName(this.bucketName);
     }
 
 }
