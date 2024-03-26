@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
  * @date : 2024/3/19 11:06
  */
 public class WeatherUtils {
-
+    //个人key
     private static final String API_KEY = "XVQGyXF6XZOPh3aSwKWmeY86r8TGbllZ";
     //天气地址
     private static final String WEATHER_URL = "https://api.map.baidu.com/weather/v1/?district_id=%s&data_type=all&ak=%s";
@@ -112,9 +112,9 @@ public class WeatherUtils {
 
     public static void main(String[] args) {
         try {
-            String city = "武汉市金融港B6"; // 要查询的城市名
-            String weatherInfo = getWeather(city);
-            System.out.println(weatherInfo);
+            String city = "湖南"; // 要查询的城市名
+            String[] coordinate = getCoordinate(city);
+            System.out.println(coordinate);
         } catch (Exception e) {
             e.printStackTrace();
         }

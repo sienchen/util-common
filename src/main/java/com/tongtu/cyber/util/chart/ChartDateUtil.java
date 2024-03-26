@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.*;
 
 /**
  * 图表日期补齐工具类
+ *
  * @author : 陈世恩
  * @date : 2023/6/6 17:46
  */
@@ -104,47 +106,6 @@ public class ChartDateUtil {
         return days;
     }
 
-
-    /**
-     * 两个日期之间的 间隔所有日期数组
-     *
-     * @param startDay  开始日期 默认当日
-     * @param endDay    结束日期 默认当日
-     * @param outFormat 默认 yyyy-MM-dd
-     * @param now       false 全部 true 当前日期截止
-     * @return
-     */
-    public static List<String> getDayOfRangeDate(String startDay, String endDay, String outFormat, boolean now) {
-        String format = "yyyyMMdd";
-        DateTime date = DateUtil.date();
-        String today = DateUtil.format(date, format);
-        if (StrUtil.isNotBlank(startDay)) {
-            startDay = startDay.trim().replace("-", "");
-        } else {
-            startDay = today;
-        }
-        if (StrUtil.isNotBlank(endDay)) {
-            endDay = endDay.trim().replace("-", "");
-        } else {
-            endDay = today;
-        }
-        if (StrUtil.isBlank(outFormat)) {
-            outFormat = "yyyy-MM-dd";
-        }
-        DateTime startDate = DateUtil.parse(startDay, format);
-        DateTime endDate = DateUtil.parse(endDay, format);
-        if (now && DateUtil.isIn(date, startDate, endDate)) {
-            endDate = date;
-        }
-        List<DateTime> ranges = DateUtil.rangeToList(startDate, endDate, DateField.DAY_OF_MONTH);
-        List<String> days = new ArrayList<>(ranges.size());
-        for (DateTime range : ranges) {
-            days.add(DateUtil.format(range, outFormat));
-        }
-        return days;
-    }
-
-
     /**
      * 获取一年的(月份集合)
      *
@@ -175,23 +136,90 @@ public class ChartDateUtil {
     }
 
     /**
-     * 获取指定月份前step的(月份集合)
+     * 获取两个日期之间的天数(天数集合)
+     *
+     * @param startDay  开始日期 默认当日
+     * @param endDay    结束日期 默认当日
+     * @param outFormat 默认 yyyy-MM-dd
+     * @param now       false 全部 true 当前日期截止
+     * @return
+     */
+    public static List<String> getRangeDays(String startDay, String endDay, String outFormat, boolean now) {
+        String format = "yyyyMMdd";
+        DateTime date = DateUtil.date();
+        String today = DateUtil.format(date, format);
+        outFormat = StrUtil.isEmpty(outFormat) ? "yyyy-MM-dd" : outFormat;
+        startDay = StrUtil.isEmpty(startDay) ? today : startDay.trim().replace("-", "");
+        endDay = StrUtil.isEmpty(endDay) ? today : endDay.trim().replace("-", "");
+        DateTime startDate = DateUtil.parse(startDay, format);
+        DateTime endDate = DateUtil.parse(endDay, format);
+        if (now && DateUtil.isIn(date, startDate, endDate)) {
+            endDate = date;
+        }
+        List<DateTime> ranges = DateUtil.rangeToList(startDate, endDate, DateField.DAY_OF_MONTH);
+        List<String> days = new ArrayList<>(ranges.size());
+        for (DateTime range : ranges) {
+            days.add(DateUtil.format(range, outFormat));
+        }
+        return days;
+    }
+
+    /**
+     * 获取两个日期之间的月份(月份集合)
+     *
+     * @param startMonth 开始日期 默认当年开始月份
+     * @param endMonth   结束日期 默认当前月份
+     * @param outFormat  默认 yyyy-MM
+     * @param now        false 全部 true 当前日期截止
+     * @return
+     */
+    public static List<String> getRangeMonths(String startMonth, String endMonth, String outFormat, boolean now) {
+        String format = "yyyyMM";
+        DateTime currentDate = DateUtil.date();
+        outFormat = StrUtil.isEmpty(outFormat) ? "yyyy-MM" : outFormat;
+        startMonth = StrUtil.isEmpty(startMonth) ? DateUtil.thisYear() + "01" : startMonth.trim().replace("-", "");
+        endMonth = StrUtil.isEmpty(endMonth) ? currentDate.toString(format) : endMonth.trim().replace("-", "");
+        if (now) {
+            DateTime endMonthDate = DateUtil.parse(endMonth,format);
+            endMonth = currentDate.before(endMonthDate) ? currentDate.toString(format) : endMonth;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        SimpleDateFormat out = new SimpleDateFormat(outFormat);
+        List<String> list = new ArrayList<>();
+        try {
+            Date startDate = sdf.parse(startMonth);
+            Date endDate = sdf.parse(endMonth);
+            //用Calendar 进行日期比较判断
+            Calendar calendar = Calendar.getInstance();
+            while (startDate.getTime() <= endDate.getTime()) {
+                list.add(out.format(startDate));
+                calendar.setTime(startDate);
+                calendar.add(Calendar.MONTH, 1);
+                startDate = calendar.getTime();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 当前日期往前step个月(月份集合)
      *
      * @param month     默认当前月份
      * @param outFormat 返回月份格式 默认 yyyy-MM
      * @param step      默认往前12月份
      * @return
      */
-    public static List<String> getRecentTwelveMonths(String month, String outFormat, Integer step) {
+    public static List<String> getRangeMonthsByStep(String month, Integer step, String outFormat) {
+        outFormat = StrUtil.isEmpty(outFormat) ? "yyyy-MM" : outFormat;
+        step = ObjUtil.isEmpty(step) ? -11 : step;
         DateTime endMonth;
         if (StrUtil.isBlank(month)) {
             endMonth = DateUtil.parse(DateUtil.format(new Date(), "yyyyMM"));
         } else {
             month = month.trim().replace("-", "");
             endMonth = DateUtil.parse(month, "yyyyMM");
-        }
-        if (StrUtil.isBlank(outFormat)) {
-            outFormat = "yyyy-MM";
         }
         DateTime beginMonth = DateUtil.offsetMonth(endMonth, step);
         List<DateTime> monthList = DateUtil.rangeToList(beginMonth, endMonth, DateField.MONTH);
@@ -202,73 +230,19 @@ public class ChartDateUtil {
         return months;
     }
 
-    /**
-     * 两个月份之间的 间隔所有月份数组
-     *
-     * @param startMonth 开始日期 默认当日
-     * @param endMonth   结束日期 默认当日
-     * @param outFormat  默认 yyyy-MM
-     * @return
-     */
-    public static List<String> getMonthOfRangeDate(String startMonth, String endMonth, String outFormat) {
-        String format = "yyyyMM";
-        Integer year = DateUtil.thisYear();
-        if (StrUtil.isNotBlank(startMonth)) {
-            startMonth = startMonth.trim().replace("-", "");
-        } else {
-            startMonth = year + "01";
-        }
-        if (StrUtil.isNotBlank(endMonth)) {
-            endMonth = endMonth.trim().replace("-", "");
-        } else {
-            endMonth = DateUtil.format(DateUtil.offsetMonth(new Date(), -1), "yyyyMM");
-        }
-        if (StrUtil.isBlank(outFormat)) {
-            outFormat = "yyyy-MM";
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        SimpleDateFormat out = new SimpleDateFormat(outFormat);
-        // 声明保存日期集合
-        List<String> list = new ArrayList<>();
-        try {
-            // 转化成日期类型
-            Date startDate = sdf.parse(startMonth);
-            Date endDate = sdf.parse(endMonth);
-
-            //用Calendar 进行日期比较判断
-            Calendar calendar = Calendar.getInstance();
-            while (startDate.getTime() <= endDate.getTime()) {
-
-                // 把日期添加到集合
-                list.add(out.format(startDate));
-
-                // 设置日期
-                calendar.setTime(startDate);
-
-                //把月数增加 1
-                calendar.add(Calendar.MONTH, 1);
-
-                // 获取增加后的日期
-                startDate = calendar.getTime();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
 
     /**
      * 小时数据补齐
      *
      * @param values    数据集合
-     * @param key       属性(和value里面保持一致)默认 key
-     * @param value     值(和value里面保持一致) 默认 value
+     * @param key       属性(和values里面保持一致)默认 key
+     * @param value     值(和values里面保持一致) 默认 value
      * @param day       日期 默认当日
      * @param outFormat 返回小时格式 默认 yyyy-MM-dd HH
      * @param now       是否返回截止到目前为止的小时
      * @return List
      */
-    public static List<Map<String, Object>> makeUpHourValues(List<Map<String, Object>> values, String key, String value, String day, String outFormat, boolean now) {
+    public static List<Map<String, Object>> completionHour(List<Map<String, Object>> values, String key, String value, String day, String outFormat, boolean now) {
         return makeUpDateValues(getHoursOfDay(day, outFormat, now), values, key, value);
     }
 
@@ -276,14 +250,14 @@ public class ChartDateUtil {
      * 天数数据补齐
      *
      * @param values    数据集合
-     * @param key       属性(和value里面保持一致)默认 key
-     * @param value     值(和value里面保持一致) 默认 value
-     * @param month     日期 默认当日
-     * @param outFormat 返回小时格式 默认 yyyy-MM-dd HH
+     * @param key       属性(和values里面保持一致)默认 key
+     * @param value     值(和values里面保持一致) 默认 value
+     * @param month     日期 默认当月
+     * @param outFormat 返回天格式 默认 yyyy-MM-dd
      * @param now       是否返回截止到目前为止的小时
      * @return List
      */
-    public static List<Map<String, Object>> makeUpDayValues(List<Map<String, Object>> values, String key, String value, String month, String outFormat, boolean now) {
+    public static List<Map<String, Object>> completionDay(List<Map<String, Object>> values, String key, String value, String month, String outFormat, boolean now) {
         return makeUpDateValues(getDayOfMonth(month, outFormat, now), values, key, value);
     }
 
@@ -291,14 +265,14 @@ public class ChartDateUtil {
      * 月份数据补齐
      *
      * @param values    数据集合
-     * @param key       属性(和value里面保持一致)默认 key
-     * @param value     值(和value里面保持一致) 默认 value
-     * @param year      日期 默认当日
-     * @param outFormat 返回小时格式 默认 yyyy-MM-dd HH
+     * @param key       属性(和values里面保持一致)默认 key
+     * @param value     值(和values里面保持一致) 默认 value
+     * @param year      日期 默认当年
+     * @param outFormat 返回小时格式 默认 yyyy-MM
      * @param now       是否返回截止到目前为止的小时
      * @return List
      */
-    public static List<Map<String, Object>> makeUpMonthValues(List<Map<String, Object>> values, String key, String value, String year, String outFormat, boolean now) {
+    public static List<Map<String, Object>> completionMonth(List<Map<String, Object>> values, String key, String value, String year, String outFormat, boolean now) {
         return makeUpDateValues(getMonthOfYear(year, outFormat, now), values, key, value);
     }
 
@@ -364,8 +338,11 @@ public class ChartDateUtil {
 
 
     public static void main(String[] args) {
-        System.out.println(getHoursOfDay("2023-06-29", "yyyy-MM-dd HH", true));
+      /*   System.out.println(getHoursOfDay("2023-06-29", "yyyy-MM-dd HH", true));
         System.out.println(getDayOfMonth("2023-06", "yyyy-MM-dd", true));
-        System.out.println(getMonthOfYear("2023", "yyyy-MM", true));
+        System.out.println(getMonthOfYear("2023", "yyyy-MM", true)); */
+        System.out.println(getRangeDays("2024-03-01", "2024-03-31", "yyyy-MM-dd", true));
+        System.out.println(getRangeMonths("2024-01", "2024-05", "yyyy-MM", true));
+        System.out.println(getRangeMonthsByStep("2024-01", -7, "yyyy-MM"));
     }
 }

@@ -130,12 +130,12 @@ public class FileChunkMergeServiceImpl extends ServiceImpl<FileChunkMergeMapper,
         String userName = JwtUtil.getUserName();
         Date date = new Date();
         String realName = param.getFileName();
-        String name = StrRegFilterUtil.getFileNameNoEx(realName);
-        String suffix = StrRegFilterUtil.getExtensionName(realName);
+        String name = StrRegFilterUtil.getFileName(realName);
+        String suffix = StrRegFilterUtil.getFileExtension(realName);
         chunkMerge.setFileRealName(realName);
         chunkMerge.setFileName(name);
         chunkMerge.setSuffix(suffix);
-        chunkMerge.setTotalSize(StrRegFilterUtil.getSize(param.getTotalSize().longValue()));
+        chunkMerge.setTotalSize(StrRegFilterUtil.convertFileSize(param.getTotalSize().longValue()));
         chunkMerge.setMd5(param.getMd5());
         chunkMerge.setFileType(param.getFileType());
         chunkMerge.setFilePath(param.getFileType().concat("/").concat(param.getFileName()));

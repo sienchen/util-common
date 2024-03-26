@@ -7,6 +7,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * 字符串处理工具类
+ *
  * @author : 陈世恩
  * @date : 2024/3/20 9:09
  */
@@ -27,22 +28,39 @@ public class StrRegFilterUtil {
      * 格式化小数
      */
     private static final DecimalFormat DF = new DecimalFormat("0.00");
+
     /**
-     * 正则匹配过滤掉特殊字符
+     * 过滤掉特殊字符
+     *
      * @param str
      * @return
      * @throws PatternSyntaxException
      */
-    public static String filter(String str) throws PatternSyntaxException {
+    public static String filterSpecialStr(String str) throws PatternSyntaxException {
         String regEx = "[`_《》~!@#$%^&*()+=|{}':;',\\[\\].<>?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(str);
         return m.replaceAll("").trim();
     }
+
     /**
-     * 获取文件扩展名，不带 .
+     * 过滤字符串多余0
+     *
+     * @param s
+     * @return
      */
-    public static String getExtensionName(String filename) {
+    public static String filterZero(String s) {
+        if (s.indexOf(".") > 0) {
+            s = s.replaceAll("0+?$", "");//去掉多余的0
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
+        }
+        return s;
+    }
+
+    /**
+     * 获取文件名(.前面)
+     */
+    public static String getFileName(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
             if ((dot > -1) && (dot < (filename.length() - 1))) {
@@ -53,9 +71,9 @@ public class StrRegFilterUtil {
     }
 
     /**
-     * Java文件操作 获取不带扩展名的文件名
+     * 获取文件扩展名(.后面)
      */
-    public static String getFileNameNoEx(String filename) {
+    public static String getFileExtension(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
             if ((dot > -1) && (dot < (filename.length()))) {
@@ -64,10 +82,11 @@ public class StrRegFilterUtil {
         }
         return filename;
     }
+
     /**
      * 文件大小转换
      */
-    public static String getSize(long size) {
+    public static String convertFileSize(long size) {
         String resultSize;
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
