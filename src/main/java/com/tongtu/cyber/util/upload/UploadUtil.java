@@ -73,7 +73,7 @@ public class UploadUtil {
      * @param response
      * @throws UnsupportedEncodingException
      */
-    public static void setResponse(String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
+    private static void setResponse(String fileName, HttpServletResponse response) throws UnsupportedEncodingException {
         fileName = StrUtil.isEmpty(fileName) ? RandomUtil.randomNumbers(8) : fileName;
         response.reset();
         response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
@@ -81,21 +81,5 @@ public class UploadUtil {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
     }
-    /**
-     * 格式化文件名称 去除特殊字符
-     *
-     * @param fileName
-     * @return
-     */
-    public static String formatFileName(String fileName) {
-        int unixSep = fileName.lastIndexOf(47);
-        int winSep = fileName.lastIndexOf(92);
-        int pos = winSep > unixSep ? winSep : unixSep;
-        if (pos != -1) {
-            fileName = fileName.substring(pos + 1);
-        }
-        fileName = fileName.replace("=", "").replace(",", "").replace("&", "").replace("#", "");
-        fileName = fileName.replaceAll("\\s", "");
-        return fileName;
-    }
+
 }

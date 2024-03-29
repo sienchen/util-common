@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Sets;
 import com.tongtu.cyber.common.constant.enums.ViewContentType;
+import com.tongtu.cyber.util.characters.StrRegFilterUtil;
 import com.tongtu.cyber.util.upload.UploadUtil;
 import io.minio.*;
 import io.minio.messages.DeleteError;
@@ -106,7 +107,7 @@ public class MinioTool {
         InputStream stream = file.getInputStream();
         //获取文件名称
         String orgName = file.getOriginalFilename();
-        orgName = UploadUtil.formatFileName(StrUtil.isEmpty(orgName) ? file.getName() : orgName);
+        orgName = StrRegFilterUtil.formatFileName(StrUtil.isEmpty(orgName) ? file.getName() : orgName);
         //构建文件存储路径
         String today = DateUtil.today().replace("-", "");
         String objectName = fileType + "/" + today + "/" + orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
@@ -167,7 +168,7 @@ public class MinioTool {
      */
     public static void download(HttpServletResponse response, String bucketName, String filePath) throws Exception {
         InputStream inputStream = getMinioFile(bucketName, filePath);
-        String fileName = new String(UploadUtil.formatFileName(filePath).getBytes("UTF-8"), "iso-8859-1");
+        String fileName = new String(StrRegFilterUtil.formatFileName(filePath).getBytes("UTF-8"), "iso-8859-1");
         UploadUtil.downLoad(response, fileName, inputStream);
     }
 

@@ -82,7 +82,23 @@ public class StrRegFilterUtil {
         }
         return filename;
     }
-
+    /**
+     * 格式化文件名称 去除特殊字符
+     *
+     * @param fileName
+     * @return
+     */
+    public static String formatFileName(String fileName) {
+        int unixSep = fileName.lastIndexOf(47);
+        int winSep = fileName.lastIndexOf(92);
+        int pos = winSep > unixSep ? winSep : unixSep;
+        if (pos != -1) {
+            fileName = fileName.substring(pos + 1);
+        }
+        fileName = fileName.replace("=", "").replace(",", "").replace("&", "").replace("#", "");
+        fileName = fileName.replaceAll("\\s", "");
+        return fileName;
+    }
     /**
      * 文件大小转换
      */
