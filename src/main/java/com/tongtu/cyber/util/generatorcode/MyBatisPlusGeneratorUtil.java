@@ -70,17 +70,17 @@ public class MyBatisPlusGeneratorUtil {
     private static TemplateConfig initTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
         //使用jecgBootEasyPOI导出
-       /*  templateConfig.setEntity("templates/entity2.java");
+        templateConfig.setEntity("templates/entity2.java");
         templateConfig.setMapper("templates/mapper2.java");
         templateConfig.setController("templates/controller2.java");
         templateConfig.setService("templates/service2.java");
-        templateConfig.setServiceImpl("templates/serviceImpl2.java"); */
+        templateConfig.setServiceImpl("templates/serviceImpl2.java");
         //使用easyExcel导出
-        templateConfig.setEntity("templates/entity3.java");
+        /* templateConfig.setEntity("templates/entity3.java");
         templateConfig.setMapper("templates/mapper3.java");
         templateConfig.setController("templates/controller3.java");
         templateConfig.setService("templates/service3.java");
-        templateConfig.setServiceImpl("templates/serviceImpl3.java");
+        templateConfig.setServiceImpl("templates/serviceImpl3.java"); */
         //精简版
        /*  templateConfig.setEntity("templates/entity4.java");
         templateConfig.setMapper("templates/mapper4.java");

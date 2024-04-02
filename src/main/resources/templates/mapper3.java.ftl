@@ -16,6 +16,7 @@ import java.util.List;
 <#if kotlin>
 interface ${table.mapperName} : ${superMapperClass}<${entity}>
 <#else>
+@Component
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
 
     IPage<${entity}> getList(@Param("page") Page<${entity}> page, @Param("param") ${entity}Dto param);
