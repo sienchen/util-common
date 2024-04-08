@@ -100,10 +100,9 @@ import java.util.List;
         Boolean b = service.saveRecord(entity);
         result.setSuccess(b);
         if (b) {
-        result.setMessage("添加成功");
+        result.setMessage("操作成功");
         } else {
-        result.setCode(251);
-        result.setMessage("添加失败,添加的数据已存在");
+        result.setMessage("操作失败");
         }
         return result;
         }
@@ -116,10 +115,9 @@ import java.util.List;
             Boolean b = service.updateRecord(entity);
             result.setSuccess(b);
             if (b) {
-            result.setMessage("修改成功");
+            result.setMessage("操作成功");
             } else {
-            result.setCode(251);
-            result.setMessage("修改失败,修改数据已经存在");
+            result.setMessage("操作失败");
             }
             return result;
             }
@@ -134,9 +132,9 @@ import java.util.List;
                 Boolean b = service.removeRecord(id);
                 result.setSuccess(b);
                 if (b) {
-                result.setMessage("删除成功");
+                result.setMessage("操作成功");
                 } else {
-                result.setMessage("删除失败");
+                result.setMessage("操作失败");
                 }
                 return result;
                 }
@@ -150,9 +148,9 @@ import java.util.List;
                     Boolean b = service.removeRecordBatch(Arrays.asList(ids));
                     result.setSuccess(b);
                     if (b) {
-                    result.setMessage("删除成功");
+                    result.setMessage("操作成功");
                     } else {
-                    result.setMessage("删除失败");
+                    result.setMessage("操作失败");
                     }
                     return result;
                     }
