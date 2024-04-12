@@ -72,7 +72,7 @@ public class ExcelOutOrInUtil {
      * @param filename  文件名称
      * @return
      */
-    public ModelAndView exportExcel(HttpServletResponse response, Integer type, String filename, List dataList, Class<?> dataClass) {
+    public ModelAndView exportExcelByAutoPoi(HttpServletResponse response, Integer type, String filename, List dataList, Class<?> dataClass) {
         response.setContentType("application/vnd.ms-excel;charset=UTF-8");
         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
         ExportParams exportParams = new ExportParams();
@@ -97,7 +97,7 @@ public class ExcelOutOrInUtil {
      * @param filename 文件名
      * @param list     导出的多个sheet页配置
      */
-    public ModelAndView exportExcel(HttpServletResponse response, String filename, List<Map<String, Object>> list) {
+    public ModelAndView exportExcelByAutoPoi(HttpServletResponse response, String filename, List<Map<String, Object>> list) {
         // 多个sheet配置参数
         final List<Map<String, Object>> sheetsList = Lists.newArrayList();
         for (Map<String, Object> map : list) {
@@ -146,7 +146,7 @@ public class ExcelOutOrInUtil {
      * @param data      导出数据集合
      * @throws IOException
      */
-    public void exportExcel(HttpServletResponse response, String filename, String sheetName, List data) {
+    public void exportExcelByEasyExcel(HttpServletResponse response, String filename, String sheetName, List data) {
         try {
             if (CollUtil.isEmpty(data)) {
                 throw new RuntimeException("导出数据不存在");
@@ -171,7 +171,7 @@ public class ExcelOutOrInUtil {
      * @param sheetNames 各sheet名称集合
      * @param data       各sheet数据集合
      */
-    public void exportExcel(HttpServletResponse response, String filename, List<String> sheetNames, List<List> data) {
+    public void exportExcelByEasyExcel(HttpServletResponse response, String filename, List<String> sheetNames, List<List> data) {
         ExcelWriter excelWriter = null;
         try {
             if (CollUtil.isEmpty(data)) {
