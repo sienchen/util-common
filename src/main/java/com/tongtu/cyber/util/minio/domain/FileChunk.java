@@ -1,4 +1,4 @@
-package com.tongtu.cyber.util.upload.minio.domain;
+package com.tongtu.cyber.util.minio.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

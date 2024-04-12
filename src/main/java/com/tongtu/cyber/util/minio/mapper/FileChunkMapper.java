@@ -1,6 +1,6 @@
-package com.tongtu.cyber.util.upload.minio.mapper;
+package com.tongtu.cyber.util.minio.mapper;
 
-import com.tongtu.cyber.util.upload.minio.domain.FileChunk;
+import com.tongtu.cyber.util.minio.domain.FileChunk;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

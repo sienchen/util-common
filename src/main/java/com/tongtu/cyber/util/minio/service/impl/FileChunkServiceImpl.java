@@ -1,12 +1,12 @@
-package com.tongtu.cyber.util.upload.minio.service.impl;
+package com.tongtu.cyber.util.minio.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.tongtu.cyber.util.upload.minio.domain.FileChunk;
-import com.tongtu.cyber.util.upload.minio.mapper.FileChunkMapper;
-import com.tongtu.cyber.util.upload.minio.service.FileChunkService;
+import com.tongtu.cyber.util.minio.domain.FileChunk;
+import com.tongtu.cyber.util.minio.mapper.FileChunkMapper;
+import com.tongtu.cyber.util.minio.service.FileChunkService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

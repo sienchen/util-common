@@ -1,4 +1,4 @@
-package com.tongtu.cyber.util.upload.minio.domain.dto;
+package com.tongtu.cyber.util.minio.domain.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

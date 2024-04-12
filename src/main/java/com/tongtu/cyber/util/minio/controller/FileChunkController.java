@@ -1,9 +1,9 @@
-package com.tongtu.cyber.util.upload.minio.controller;
+package com.tongtu.cyber.util.minio.controller;
 
 import com.tongtu.cyber.common.api.vo.Result;
-import com.tongtu.cyber.util.upload.minio.domain.FileChunk;
-import com.tongtu.cyber.util.upload.minio.domain.vo.FileChunkVo;
-import com.tongtu.cyber.util.upload.minio.service.FileChunkMergeService;
+import com.tongtu.cyber.util.minio.domain.FileChunk;
+import com.tongtu.cyber.util.minio.domain.vo.FileChunkVo;
+import com.tongtu.cyber.util.minio.service.FileChunkMergeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;

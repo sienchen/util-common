@@ -1,16 +1,16 @@
-package com.tongtu.cyber.util.upload.minio;
+package com.tongtu.cyber.util.minio;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Sets;
 import com.tongtu.cyber.common.constant.enums.ViewContentType;
+import com.tongtu.cyber.common.exception.JeecgBootException;
 import com.tongtu.cyber.util.characters.StrRegFilterUtil;
-import com.tongtu.cyber.util.upload.UploadUtil;
+import com.tongtu.cyber.util.upload.UpLoadUtil;
 import io.minio.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +28,6 @@ import java.util.stream.Stream;
  * @author : 陈世恩
  * @date : 2024/3/20 11:24
  */
-@Log4j2
 public class MinioTool {
     private static String minioUrl;
     private static String minioName;
@@ -152,7 +151,7 @@ public class MinioTool {
      * @param newBucketName 桶名
      * @param objectName    文件路径
      */
-    public static void removeMinioFile(String newBucketName, String objectName) throws Exception  {
+    public static void removeMinioFile(String newBucketName, String objectName) throws Exception {
         connection(newBucketName);
         RemoveObjectArgs objectArgs = (RemoveObjectArgs) ((RemoveObjectArgs.Builder) ((RemoveObjectArgs.Builder) RemoveObjectArgs.builder().object(objectName)).bucket(newBucketName)).build();
         minioClient.removeObject(objectArgs);
@@ -169,7 +168,7 @@ public class MinioTool {
     public static void download(HttpServletResponse response, String bucketName, String filePath) throws Exception {
         InputStream inputStream = getMinioFile(bucketName, filePath);
         String fileName = new String(StrRegFilterUtil.formatFileName(filePath).getBytes("UTF-8"), "iso-8859-1");
-        UploadUtil.downLoad(response, fileName, inputStream);
+        new UpLoadUtil().downLoad(response, fileName, inputStream);
     }
 
     /**
@@ -245,7 +244,7 @@ public class MinioTool {
         //打印删除失败信息
         for (Result<DeleteError> result : deleteRes) {
             DeleteError error = result.get();
-            log.error("minio文件删除失败!!!md5=" + md5 + ":" + error.objectName() + "; " + error.message());
+            throw new JeecgBootException("minio文件删除失败!!!md5=" + md5 + ":" + error.objectName() + "; " + error.message());
         }
     }
 }

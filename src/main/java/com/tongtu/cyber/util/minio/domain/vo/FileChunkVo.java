@@ -1,4 +1,4 @@
-package com.tongtu.cyber.util.upload.minio.domain.vo;
+package com.tongtu.cyber.util.minio.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;

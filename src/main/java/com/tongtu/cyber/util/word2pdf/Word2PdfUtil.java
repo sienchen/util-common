@@ -6,7 +6,7 @@ import com.aspose.words.License;
 import com.aspose.words.SaveFormat;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.tongtu.cyber.common.exception.JeecgBootException;
-import com.tongtu.cyber.util.upload.UploadUtil;
+import com.tongtu.cyber.util.upload.UpLoadUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
@@ -47,7 +47,7 @@ public class Word2PdfUtil {
         //word转pdf
         String pdfPath = generatePDF(wordPath);
         //下载
-        UploadUtil.downLoad(response, pdfPath);
+        UpLoadUtil.downLoad(response, pdfPath);
     }
 
     /**
@@ -63,7 +63,7 @@ public class Word2PdfUtil {
         //生成word
         generateWord(data, templateName, wordPath);
         //下载
-        UploadUtil.downLoad(response, wordPath);
+        UpLoadUtil.downLoad(response, wordPath);
 
     }
 

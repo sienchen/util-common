@@ -1,9 +1,12 @@
 package com.tongtu.cyber.util.upload;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import lombok.extern.log4j.Log4j2;
+import cn.hutool.core.util.ZipUtil;
+import com.tongtu.cyber.util.characters.StrRegFilterUtil;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -15,29 +18,81 @@ import java.net.URLEncoder;
  * @author : 陈世恩
  * @date : 2024/3/20 14:21
  */
-@Log4j2
-public class UploadUtil {
+@Component
+public class UpLoadUtil {
     /**
      * 下载文件
      *
      * @param filePath 文件路径
      * @param response
      */
-    public static void downLoad(HttpServletResponse response, String filePath) throws Exception {
+    public void downLoad(HttpServletResponse response, String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             throw new RuntimeException("文件路径不存在!!!");
         }
-        downLoad(response, file.getName(), new FileInputStream(file));
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        downLoad(response, file.getName(), inputStream);
     }
 
     /**
      * 下载文件
+     *
+     * @param filePath 文件路径
+     * @param response
+     */
+    public void downLoad(HttpServletResponse response, String filePath, String basePath) {
+        String fileName = StrRegFilterUtil.getFileNameByPath(filePath);
+        if (StrUtil.isEmpty(fileName)) {
+            throw new RuntimeException("文件名称为空!!!");
+        }
+        InputStream inputStream = null;
+        File outFile = null;
+        String zipStrPath = "";
+        try {
+            if (filePath.endsWith(".zip")) {
+                int dotIndex = fileName.lastIndexOf('.');
+                if (dotIndex != -1) {
+                    zipStrPath = basePath + File.separator + fileName.substring(0, dotIndex);
+                    outFile = ZipUtil.zip(zipStrPath, filePath);
+                    inputStream = new FileInputStream(outFile);
+                }
+            } else {
+                if (filePath.indexOf("template") != -1) {
+                    //绝对路径(模板)
+                    inputStream = this.getClass().getClassLoader().getResourceAsStream(filePath);
+                } else {
+                    //相对路径
+                    inputStream = new FileInputStream(new File(filePath));
+                }
+            }
+            downLoad(response, fileName, inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            // 删除临时文件夹和临时压缩文件
+            FileUtil.del(outFile);
+            if (filePath.endsWith(".zip")) {
+                FileUtil.del(zipStrPath);
+            }
+        }
+    }
+
+    /**
+     * 下载文件
+     *
      * @param response
      * @param fileName
      * @param inputStream
      */
-    public static void downLoad(HttpServletResponse response, String fileName, InputStream inputStream) {
+    public void downLoad(HttpServletResponse response, String fileName, InputStream inputStream) {
         if (ObjUtil.isEmpty(inputStream)) {
             throw new RuntimeException("inputStream 为空!!!");
         }
@@ -69,6 +124,7 @@ public class UploadUtil {
 
     /**
      * 设置响应头
+     *
      * @param fileName
      * @param response
      * @throws UnsupportedEncodingException

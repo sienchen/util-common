@@ -1,4 +1,4 @@
-package com.tongtu.cyber.util.upload.minio.service.impl;
+package com.tongtu.cyber.util.minio.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -9,13 +9,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tongtu.cyber.common.system.util.JwtUtil;
 import com.tongtu.cyber.util.characters.PingYingUtil;
 import com.tongtu.cyber.util.characters.StrRegFilterUtil;
-import com.tongtu.cyber.util.upload.minio.MinioTool;
-import com.tongtu.cyber.util.upload.minio.domain.FileChunk;
-import com.tongtu.cyber.util.upload.minio.domain.FileChunkMerge;
-import com.tongtu.cyber.util.upload.minio.domain.vo.FileChunkVo;
-import com.tongtu.cyber.util.upload.minio.mapper.FileChunkMergeMapper;
-import com.tongtu.cyber.util.upload.minio.service.FileChunkMergeService;
-import com.tongtu.cyber.util.upload.minio.service.FileChunkService;
+import com.tongtu.cyber.util.minio.MinioTool;
+import com.tongtu.cyber.util.minio.domain.FileChunk;
+import com.tongtu.cyber.util.minio.domain.FileChunkMerge;
+import com.tongtu.cyber.util.minio.domain.vo.FileChunkVo;
+import com.tongtu.cyber.util.minio.mapper.FileChunkMergeMapper;
+import com.tongtu.cyber.util.minio.service.FileChunkMergeService;
+import com.tongtu.cyber.util.minio.service.FileChunkService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,15 +1,12 @@
-
 package com.tongtu.cyber.util.excel;
 
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.support.ExcelTypeEnum;
@@ -23,6 +20,7 @@ import com.tongtu.cyber.common.exception.JeecgBootException;
 import com.tongtu.cyber.common.util.CommonUtils;
 import com.tongtu.cyber.modules.system.entity.SysFile;
 import com.tongtu.cyber.modules.system.service.ISysFileService;
+import com.tongtu.cyber.util.upload.UpLoadUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.io.IOUtils;
@@ -32,6 +30,7 @@ import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.enmus.ExcelType;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -58,10 +57,11 @@ public class ExcelOutOrInUtil {
     //临时文件夹
     @Value("${temporary.excelLogPath:/data/tongtu}")
     private String baseDir;
-    @Value("${jeecg.uploadType}")
-    private String uploadType;
     //@Autowired
     private ISysFileService sysFileService;
+    @Autowired
+    private UpLoadUtil upLoadUtil;
+    /**【autoPoi方式-导出】=================================================================================== */
 
     /**
      * 【autoPoi方式】单excel导出(实体类方式)
@@ -133,10 +133,10 @@ public class ExcelOutOrInUtil {
      * @param templatePath excel模板路径
      */
     public void exportExcelByAutoPoi(HttpServletResponse response, List<Map<String, Object>> dataList, String templatePath) {
-        this.downloadExcel(response, this.createExcelByAutoPoi(dataList, templatePath));
+        upLoadUtil.downLoad(response, this.createExcelByAutoPoi(dataList, templatePath), baseDir);
     }
 
-
+    /**【easyExcel方式-导出】=================================================================================== */
     /**
      * 【easyExcel方式】单excel导出(实体类方式)
      *
@@ -201,59 +201,17 @@ public class ExcelOutOrInUtil {
     }
 
     /**
-     * 【EasyExcel方式】excel导出(自定义模板)
+     * 【easyExcel方式】excel导出(自定义模板)
      *
      * @param dataList     数据集合(每个Map代表一个sheet页数据，map中的key表示数据对象，其中key必为name 文件名)
      * @param templatePath excel模板路径
      */
     public void exportExcelByEasyExcel(HttpServletResponse response, String templatePath, List<Map<String, Object>> dataList) {
-        this.downloadExcel(response, this.createExcelByAutoPoi(dataList, templatePath));
+        upLoadUtil.downLoad(response, this.createExcelByEasyExcel(dataList, templatePath), this.baseDir);
     }
 
     /**
-     * 导入后错误信息下载
-     *
-     * @param type         0 远程服务器生成 1本地生成
-     * @param errorLines
-     * @param successLines
-     * @param errorMessage
-     * @return
-     * @throws IOException
-     */
-    public Result imporExcelError(Integer type, int errorLines, int successLines, List<String> errorMessage) {
-        Result res = new Result();
-        if (errorLines == 0) {
-            res.setCode(200);
-            res.setSuccess(true);
-            res.setMessage("共" + successLines + "行数据格式全部正确可导入！！！");
-        } else {
-            //上传信息
-            String excelErrorName = DateUtil.date().toString("yyyyMMdd") + Math.round(Math.random() * 10000.0D) + ".txt";
-            String fileUrl;
-            if (type == null) {
-                fileUrl = uploadErrorLog(errorMessage, excelErrorName);
-            } else {
-                fileUrl = saveErrorTxtByList(errorMessage, excelErrorName);
-            }
-            //包装信息
-            int totalCount = successLines + errorLines;
-            Map<String, Object> result = new HashMap<>();
-            result.put("totalCount", totalCount);
-            result.put("errorCount", errorLines);
-            result.put("successCount", successLines);
-            result.put("msg", "总上传行数：" + totalCount + "，已导入行数：" + successLines + "，错误行数：" + errorLines);
-            result.put("fileName", excelErrorName);
-            result.put("errorFilePath", fileUrl);
-            res.setSuccess(false);
-            res.setCode(201);
-            res.setResult(result);
-            res.setMessage("文件导入成功，但有错误!!!");
-        }
-        return res;
-    }
-
-    /**
-     * 【easyExcel】 生成excel
+     * 【easyExcel方式】excel导出(自定义模板)
      *
      * @param dataList     数据集合和excel名称(map包含name文件名)
      * @param templatePath excel模板路径
@@ -306,13 +264,13 @@ public class ExcelOutOrInUtil {
 
 
     /**
-     * 【AutoPoi】 生成excel
+     * 【autoPoi方式】excel导出(自定义模板)
      *
      * @param dataList     数据集合和excel名称(map包含name文件名)
      * @param templatePath excel模板路径
      * @return 返回生成后文件路径
      */
-    public String createExcelByAutoPoi(List<Map<String, Object>> dataList, String templatePath) {
+    private String createExcelByAutoPoi(List<Map<String, Object>> dataList, String templatePath) {
         if (CollUtil.isEmpty(dataList)) {
             throw new JeecgBootException("导出数据不存在！！！");
         }
@@ -360,62 +318,46 @@ public class ExcelOutOrInUtil {
         return filePath;
     }
 
-
     /**
-     * excel和excel的zip压缩包下载
+     * 导入excel错误信息返回
      *
-     * @param response 输出流
-     * @param filePath 需下载文件路径
+     * @param type         0 远程服务器生成 1本地生成
+     * @param errorLines
+     * @param successLines
+     * @param errorMessage
+     * @return
+     * @throws IOException
      */
-    public void downloadExcel(HttpServletResponse response, String filePath) {
-        if (StrUtil.isBlank(filePath)) {
-            throw new JeecgBootException("导出文件名不为空！！！");
-        }
-        OutputStream outputStream = null;
-        InputStream fileInputStream = null;
-        File file = null;
-        String excelPath = this.baseDir;
-        try {
-            String[] split = filePath.split("/");
-            String fileName = split[split.length - 1];
-            if (filePath.endsWith(".zip")) {
-                int dotIndex = fileName.lastIndexOf('.');
-                if (dotIndex != -1) {
-                    excelPath = excelPath + "/" + fileName.substring(0, dotIndex);
-                    file = ZipUtil.zip(excelPath, filePath);
-                    fileInputStream = new FileInputStream(file);
-                }
+    public Result imporExcelError(Integer type, int errorLines, int successLines, List<String> errorMessage) {
+        Result res = new Result();
+        if (errorLines == 0) {
+            res.setCode(200);
+            res.setSuccess(true);
+            res.setMessage("共" + successLines + "行数据格式全部正确可导入！！！");
+        } else {
+            //上传信息
+            String excelErrorName = DateUtil.date().toString("yyyyMMdd") + Math.round(Math.random() * 10000.0D) + ".txt";
+            String fileUrl;
+            if (type == null) {
+                fileUrl = uploadErrorLog(errorMessage, excelErrorName);
             } else {
-                if (filePath.indexOf("template") != -1) {
-                    //绝对路径(模板)
-                    fileInputStream = this.getClass().getClassLoader().getResourceAsStream(filePath);
-                } else {
-                    //相对路径
-                    fileInputStream = new FileInputStream(new File(filePath));
-                }
+                fileUrl = saveErrorTxtByList(errorMessage, excelErrorName);
             }
-            if (fileInputStream != null) {
-                byte[] buf = new byte[1024];
-                response.setContentType("application/force-download");
-                response.addHeader("Content-Disposition", "attachment;fileName=" + new String(fileName.getBytes("UTF-8"), "iso-8859-1"));
-                outputStream = response.getOutputStream();
-                int len;
-                while ((len = fileInputStream.read(buf)) > 0) {
-                    outputStream.write(buf, 0, len);
-                }
-                response.flushBuffer();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            IoUtil.close(fileInputStream);
-            IoUtil.close(outputStream);
-            // 删除临时文件夹和临时压缩文件
-            FileUtil.del(file);
-            if (filePath.endsWith(".zip")) {
-                FileUtil.del(excelPath);
-            }
+            //包装信息
+            int totalCount = successLines + errorLines;
+            Map<String, Object> result = new HashMap<>();
+            result.put("totalCount", totalCount);
+            result.put("errorCount", errorLines);
+            result.put("successCount", successLines);
+            result.put("msg", "总上传行数：" + totalCount + "，已导入行数：" + successLines + "，错误行数：" + errorLines);
+            result.put("fileName", excelErrorName);
+            result.put("errorFilePath", fileUrl);
+            res.setSuccess(false);
+            res.setCode(201);
+            res.setResult(result);
+            res.setMessage("文件导入成功，但有错误!!!");
         }
+        return res;
     }
 
     /**
@@ -434,7 +376,7 @@ public class ExcelOutOrInUtil {
         SysFile sysFile = new SysFile();
         sysFile.setType("excelError");
         sysFile.setFileName(fileName);
-        String path = CommonUtils.upload(multipartFile, sysFile.getType(), this.uploadType, (String) null);
+        String path = CommonUtils.upload(multipartFile, sysFile.getType(), "minio", (String) null);
         String id = IdWorker.get32UUID();
         sysFile.setFilePath(path);
         sysFile.setId(id);

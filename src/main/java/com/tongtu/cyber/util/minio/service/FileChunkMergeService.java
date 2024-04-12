@@ -1,9 +1,9 @@
-package com.tongtu.cyber.util.upload.minio.service;
+package com.tongtu.cyber.util.minio.service;
 
-import com.tongtu.cyber.util.upload.minio.domain.FileChunk;
-import com.tongtu.cyber.util.upload.minio.domain.FileChunkMerge;
+import com.tongtu.cyber.util.minio.domain.FileChunk;
+import com.tongtu.cyber.util.minio.domain.FileChunkMerge;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tongtu.cyber.util.upload.minio.domain.vo.FileChunkVo;
+import com.tongtu.cyber.util.minio.domain.vo.FileChunkVo;
 
 /**
  * <p>

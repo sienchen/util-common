@@ -1,4 +1,4 @@
-package com.tongtu.cyber.util.upload.minio;
+package com.tongtu.cyber.util.minio;
 
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
-package com.tongtu.cyber.util.upload.minio.service;
+package com.tongtu.cyber.util.minio.service;
 
-import com.tongtu.cyber.util.upload.minio.domain.FileChunk;
+import com.tongtu.cyber.util.minio.domain.FileChunk;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;

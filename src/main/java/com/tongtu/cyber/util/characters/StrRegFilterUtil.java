@@ -1,5 +1,7 @@
 package com.tongtu.cyber.util.characters;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,30 +60,42 @@ public class StrRegFilterUtil {
     }
 
     /**
+     * 根据文件路径获取文件名
+     */
+    public static String getFileNameByPath(String filePath) {
+        if (StrUtil.isEmpty(filePath)) {
+            return null;
+        }
+        String[] split = filePath.replace("\\", "/").split("/");
+        return split[split.length - 1];
+    }
+
+    /**
      * 获取文件名(.前面)
      */
-    public static String getFileName(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length() - 1))) {
-                return filename.substring(dot + 1);
+    public static String getFileName(String fileName) {
+        if ((fileName != null) && (fileName.length() > 0)) {
+            int dot = fileName.lastIndexOf('.');
+            if ((dot > -1) && (dot < (fileName.length() - 1))) {
+                return fileName.substring(dot + 1);
             }
         }
-        return filename;
+        return fileName;
     }
 
     /**
      * 获取文件扩展名(.后面)
      */
-    public static String getFileExtension(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length()))) {
-                return filename.substring(0, dot);
+    public static String getFileExtension(String fileName) {
+        if ((fileName != null) && (fileName.length() > 0)) {
+            int dot = fileName.lastIndexOf('.');
+            if ((dot > -1) && (dot < (fileName.length()))) {
+                return fileName.substring(0, dot);
             }
         }
-        return filename;
+        return fileName;
     }
+
     /**
      * 格式化文件名称 去除特殊字符
      *
@@ -99,6 +113,7 @@ public class StrRegFilterUtil {
         fileName = fileName.replaceAll("\\s", "");
         return fileName;
     }
+
     /**
      * 文件大小转换
      */
