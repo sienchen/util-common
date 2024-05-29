@@ -26,7 +26,7 @@ public class UpLoadUtil {
      * @param filePath 文件路径
      * @param response
      */
-    public void downLoad(HttpServletResponse response, String filePath) {
+    public  static  void downLoad(HttpServletResponse response, String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             throw new RuntimeException("文件路径不存在!!!");
@@ -92,7 +92,7 @@ public class UpLoadUtil {
      * @param fileName
      * @param inputStream
      */
-    public void downLoad(HttpServletResponse response, String fileName, InputStream inputStream) {
+    public static void downLoad(HttpServletResponse response, String fileName, InputStream inputStream) {
         if (ObjUtil.isEmpty(inputStream)) {
             throw new RuntimeException("inputStream 为空!!!");
         }
