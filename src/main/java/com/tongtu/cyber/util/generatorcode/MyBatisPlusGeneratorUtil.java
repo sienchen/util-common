@@ -1,4 +1,5 @@
 package com.tongtu.cyber.util.generatorcode;
+
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -70,19 +71,19 @@ public class MyBatisPlusGeneratorUtil {
     private static TemplateConfig initTemplateConfig() {
         TemplateConfig templateConfig = new TemplateConfig();
         //使用jecgBootEasyPOI导出
-        templateConfig.setEntity("templates/entity2.java");
+        /* templateConfig.setEntity("templates/entity2.java");
         templateConfig.setMapper("templates/mapper2.java");
         templateConfig.setController("templates/controller2.java");
         templateConfig.setService("templates/service2.java");
-        templateConfig.setServiceImpl("templates/serviceImpl2.java");
+        templateConfig.setServiceImpl("templates/serviceImpl2.java"); */
         //使用easyExcel导出
-        /* templateConfig.setEntity("templates/entity3.java");
+        templateConfig.setEntity("templates/entity3.java");
         templateConfig.setMapper("templates/mapper3.java");
         templateConfig.setController("templates/controller3.java");
         templateConfig.setService("templates/service3.java");
-        templateConfig.setServiceImpl("templates/serviceImpl3.java"); */
+        templateConfig.setServiceImpl("templates/serviceImpl3.java");
         //精简版
-       /*  templateConfig.setEntity("templates/entity4.java");
+        /* templateConfig.setEntity("templates/entity4.java");
         templateConfig.setMapper("templates/mapper4.java");
         templateConfig.setController("templates/controller4.java");
         templateConfig.setService("templates/service4.java");
@@ -204,6 +205,7 @@ public class MyBatisPlusGeneratorUtil {
         injectionConfig.setFileOutConfigList(focList);
         return injectionConfig;
     }
+
     /**
      * 读取控制台内容信息
      */
