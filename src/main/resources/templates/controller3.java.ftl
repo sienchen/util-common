@@ -52,33 +52,28 @@ import java.util.List;
 
     @ApiOperation(value = "导入excel")
     @RequestMapping(value = "/importExcel",consumes = "multipart/*", headers = "content-type=multipart/form-data", method = RequestMethod.POST)
-    @ApiImplicitParam(name = "type", value = "status导入方式 0:不导入，只校验数据正确性 1:正确行导入，错误行提示 2:导入-不覆盖  3:导入-覆盖 默认：1", defaultValue = "1")
-    public Result importExcel(@RequestParam("file") MultipartFile res, HttpServletRequest request, Integer type)  {
-    return service.importExcel(res, request, type);
+    public void importExcel(@RequestParam("file") MultipartFile res, HttpServletRequest request, Integer type)  {
+         service.importExcel(res, request, type);
     }
 
     @ApiOperation(value = "导出excel")
     @RequestMapping(value = "/exportExcel", method = RequestMethod.GET)
-    public ModelAndView exportExcel(HttpServletResponse response, @ModelAttribute ${entity}Dto param)  {
-    return service.exportExcel(response, 1, param);
+    public ModelAndView exportExcel(HttpServletResponse response, ${entity}Dto param)  {
+         return service.exportExcel(response, 1, param);
     }
 
     @ApiOperation(value = "分页查询")
     @RequestMapping(value = "/getPageList", method = RequestMethod.GET)
-    public Result
-    <IPage<${entity}>> getPageList(@ModelAttribute ${entity}Dto param) {
-    Result
-    <IPage<${entity}>> result = new Result<>();
+    public Result <IPage<${entity}>> getPageList(${entity}Dto param) {
+    Result<IPage<${entity}>> result = new Result<>();
     result.setResult(service.getPageList(param));
     return result;
     }
 
     @ApiOperation(value = "全部查询")
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public Result
-    <List<${entity}>> getList(@ModelAttribute ${entity}Dto param) {
-    Result
-    <List<${entity}>> result = new Result<>();
+    public Result <List<${entity}>> getList(@ModelAttribute ${entity}Dto param) {
+    Result <List<${entity}>> result = new Result<>();
     result.setResult(service.getList(param));
     return result;
     }
@@ -95,8 +90,7 @@ import java.util.List;
     @ApiOperation(value = "添加")
     @RequestMapping(value = "/saveRecord", method = RequestMethod.POST)
     public Result saveRecord(@Validated @RequestBody ${entity} entity) {
-    Result
-    <String> result = new Result<>();
+    Result<String> result = new Result<>();
         Boolean b = service.saveRecord(entity);
         result.setSuccess(b);
         if (b) {
@@ -110,8 +104,7 @@ import java.util.List;
         @ApiOperation(value = "修改")
         @RequestMapping(value = "/updateRecord", method = RequestMethod.POST)
         public Result updateRecord(@Validated @RequestBody ${entity} entity) {
-        Result
-        <String> result = new Result<>();
+        Result<String> result = new Result<>();
             Boolean b = service.updateRecord(entity);
             result.setSuccess(b);
             if (b) {
@@ -127,8 +120,7 @@ import java.util.List;
             @RequestMapping(value = "/removeRecord", method = RequestMethod.POST)
             @ApiImplicitParam(name = "id", value = "记录id", paramType = "String", required = true)
             public Result removeRecord(String id) {
-            Result
-            <String> result = new Result<>();
+            Result<String> result = new Result<>();
                 Boolean b = service.removeRecord(id);
                 result.setSuccess(b);
                 if (b) {
@@ -143,8 +135,7 @@ import java.util.List;
                 @RequestMapping(value = "/removeRecordBatch", method = RequestMethod.POST)
                 @ApiImplicitParam(name = "ids", value = "记录id(多条逗号分隔)", paramType = "String", required = true)
                 public Result removeRecordBatch(String ids) {
-                Result
-                <String> result = new Result<>();
+                Result<String> result = new Result<>();
                     Boolean b = service.removeRecordBatch(Arrays.asList(ids));
                     result.setSuccess(b);
                     if (b) {

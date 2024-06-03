@@ -38,7 +38,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     private ${table.mapperName} mapper;
 
     @Autowired
-    private EasyExcelOutOrInUtil easyExcelOutOrInUtil;
+    private ExcelOutOrInUtil excelOutOrInUtil;
 
     @Override
     public IPage<${entity}> getPageList(${entity}Dto param) {
@@ -56,7 +56,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     public ${entity} getItem(String id) {
         ${entity}Dto param = new ${entity}Dto();
-        param.setIds(id);
+        param.setIds(Arrays.asList(id));
         List<${entity}> list = this.getList(param);
         if (CollUtil.isEmpty(list)) {
             return null;
@@ -70,18 +70,18 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveRecord(${entity} entity) {
-        if (queryList(entity, 1)) {
+       <#-- if (queryList(entity, 1)) {
             return false;
-        }
+        }-->
         return this.mapper.insert(entity) != 0;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateRecord(${entity} entity) {
-        if (queryList(entity, 1)) {
+        <#--if (queryList(entity, 1)) {
             return false;
-        }
+        }-->
         return this.mapper.updateById(entity) != 0;
     }
 
@@ -94,27 +94,25 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeRecordBatch(List<String> ids) {
-       return this.baseMapper.deleteBatchIds(ids)!= 0;
+       return this.mapper.deleteBatchIds(ids)!= 0;
     }
 
     @Override
     public void exportExcel(HttpServletResponse response, Integer type, ${entity}Dto param) {
-         List<${entity}> list= new ArrayList<>();
-        String fileName = "${table.comment!}";
-        String sheetName;
+        List<${entity}> list = new ArrayList<>();
+        String name = "${table.comment!}";
         if (type == null || type == 0) {
-            sheetName = "模板";
-            list.add(new ${entity}());
+        list.add(new ${entity}());
         } else {
-            sheetName = "导出数据";
-             if (StrUtil.isNotBlank(param.getIds())) {
-                ${entity}Dto par = new ${entity}Dto();
-                 par.setIds(param.getIds());
-                 param = par;
-            }
-            list = this.getList(param);
+        if (CollUtil.isNotEmpty(param.getIds())) {
+        ${entity}Dto par = new ${entity}Dto();
+        par.setIds(param.getIds());
+        param = par;
         }
-         easyExcelOutOrInUtil.exportExcel(response, fileName, sheetName, list);
+        list = this.getList(param);
+        }
+        excelOutOrInUtil.exportExcelByEasyExcel(response, name, "数据", list);
+
     }
 
     @Override
@@ -123,7 +121,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
             return Result.error(430, "文件不符合模板要求，请参照上传文件模板进行调整!");
         }
         try {
-        List<${entity}> list = easyExcelOutOrInUtil.importExcel(res, ${entity}.class);
+        List<${entity}> list = EasyExcel.read(res.getInputStream()).head(${entity}.class).doReadAllSync();
         if (CollUtil.isNotEmpty(list)) {
             int successLines = 0, errorLines = 0;
             //错误信息
@@ -143,7 +141,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
              errorLines += errorMessageList.size();
              successLines += (list.size() - errorLines);
              this.saveBatch(successArr);
-             return ExcelOutOrInUtil.imporReturnRes(errorLines, successLines, errorMessageList);
+             return excelOutOrInUtil.imporReturnRes(0,errorLines, successLines, errorMessageList);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -160,9 +158,9 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      */
     private boolean queryList(${entity} entity, int flag) {
         QueryWrapper<${entity}> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(flag == 1 && StrUtil.isNotBlank(entity.getName()), "name", entity.getName())
+        queryWrapper.eq(flag == 1 && StrUtil.isNotBlank(entity.getId()), "name", entity.getId())
         .ne(flag == 2 && StrUtil.isNotBlank(entity.getId()), "id", entity.getId())
-        .eq(flag == 2 && StrUtil.isNotBlank(entity.getName()), "name", entity.getName());
+        .eq(flag == 2 && StrUtil.isNotBlank(entity.getId()), "name", entity.getId());
         return this.baseMapper.selectCount(queryWrapper) > 0;
    }
 
